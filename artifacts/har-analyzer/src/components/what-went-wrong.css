@@ -501,3 +501,65 @@
     to { opacity: 1; transform: translateY(0); }
   }
 }
+
+.dark .what-went-wrong {
+  --ww-ink: #e5eae3;
+  --ww-muted: #a6b2aa;
+  --ww-line: #3b4740;
+  --ww-paper: #202825;
+  --ww-teal: #92c5b1;
+  --ww-red: #efaaa0;
+  --ww-amber: #e9ce83;
+  border-color: #3b4740;
+  background: #202825;
+  color: #e5eae3;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, .12);
+}
+
+.dark .what-went-wrong .ww-verdict { border-color:#3b4740; background:#27322c; }
+.dark .what-went-wrong.ww-verdict-problems .ww-verdict { background:#392b28; }
+.dark .what-went-wrong.ww-verdict-warnings .ww-verdict { background:#383321; }
+.dark .what-went-wrong .ww-verdict-icon { border-color:#436151; background:#2c4036; color:#b8dac6; }
+.dark .what-went-wrong.ww-verdict-problems .ww-verdict-icon { border-color:#67423e; background:#4a302d; color:#efaaa0; }
+.dark .what-went-wrong.ww-verdict-warnings .ww-verdict-icon { border-color:#635333; background:#4b4025; color:#e9ce83; }
+.dark .what-went-wrong .ww-section-kicker { color:#9ab9a8; }
+.dark .what-went-wrong .ww-verdict-copy h2,
+.dark .what-went-wrong .ww-finding-topline h3,
+.dark .what-went-wrong .ww-timeline-heading h3 { color:#e5eae3; }
+.dark .what-went-wrong .ww-verdict-copy p,
+.dark .what-went-wrong .ww-explanation,
+.dark .what-went-wrong .ww-total-time,
+.dark .what-went-wrong .ww-healthy-state p { color:#aab6ae; }
+.dark .what-went-wrong .ww-finding-count { border-color:#465249; color:#aab6ae; }
+.dark .what-went-wrong .ww-finding-count strong { color:#e5eae3; }
+.dark .what-went-wrong .ww-finding { border-color:#3a4640; }
+.dark .what-went-wrong .ww-finding-index { color:#85938a; }
+.dark .what-went-wrong .ww-severity-problem { background:#4c302c; color:#f0b8af; }
+.dark .what-went-wrong .ww-severity-warning { background:#494022; color:#ead58d; }
+.dark .what-went-wrong .ww-detail-block h4,
+.dark .what-went-wrong .ww-recheck h4 { color:#b6c9bb; }
+.dark .what-went-wrong .ww-url-list li { border-color:#3c4942; background:#27312c; }
+.dark .what-went-wrong .ww-url-list code,
+.dark .what-went-wrong .ww-timeline-url code { color:#bdd9c9; }
+.dark .what-went-wrong .ww-recheck { border-color:#5e8975; background:#27352d; }
+.dark .what-went-wrong .ww-recheck li { color:#b7c4bb; }
+.dark .what-went-wrong .ww-recheck li svg { color:#9fc8b2; }
+.dark .what-went-wrong .ww-healthy-state { border-color:#3b4740; }
+.dark .what-went-wrong .ww-healthy-mark { background:#2c4036; color:#a9d5bd; }
+.dark .what-went-wrong .ww-healthy-state h3 { color:#c5e0ce; }
+.dark .what-went-wrong .ww-timeline { background:#232c28; }
+.dark .what-went-wrong .ww-track-line { background:#46534b; }
+.dark .what-went-wrong .ww-track-marker,
+.dark .what-went-wrong .ww-track-anchor { border-color:#232c28; }
+.dark .what-went-wrong .ww-track-anchor { background:#8ebda7; }
+.dark .what-went-wrong .ww-track-marker { background:#df8277; box-shadow:0 0 0 1px #a65e55; }
+.dark .what-went-wrong .ww-track.no-error .ww-track-line { background:linear-gradient(90deg,#5f8a74,#46534b); }
+.dark .what-went-wrong .ww-track-labels { color:#a3b0a7; }
+.dark .what-went-wrong .ww-track-labels time { color:#85958b; }
+.dark .what-went-wrong .ww-error-time,
+.dark .what-went-wrong .ww-offset-value { color:#edaaa0; }
+.dark .what-went-wrong .ww-no-error-label { color:#a9d5bd; }
+.dark .what-went-wrong .ww-timeline-summary { border-color:#3d4942; }
+.dark .what-went-wrong .ww-timeline-url { color:#9eaca3; }
+.dark .what-went-wrong .ww-timeline-empty { border-color:#3a4740; background:#29332e; color:#b1bdb5; }
+.dark .what-went-wrong .ww-timeline-empty svg { color:#9fc4ae; }

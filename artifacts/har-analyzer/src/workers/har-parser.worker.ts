@@ -1,4 +1,5 @@
 import { analyzeHar, type AnalysisResult } from '../analyzer.js';
+import { redactHar } from '../shareTools.js';
 
 type HarRequest = {
   id: number;
@@ -11,11 +12,14 @@ type HarRequest = {
 };
 
 type WorkerResponse =
-  | { ok: true; requests: HarRequest[]; totalTime: number; analysis: AnalysisResult }
-  | { ok: false; error: string };
+  | { ok: true; kind: 'analysis'; requests: HarRequest[]; totalTime: number; analysis: AnalysisResult }
+  | { ok: true; kind: 'redaction'; sanitizedJson: string; redactedCount: number }
+  | { ok: false; kind: 'error'; error: string };
+
+type WorkerRequest = { kind: 'analysis' | 'redaction'; file: File };
 
 const workerScope = self as unknown as {
-  onmessage: ((event: MessageEvent<File>) => void) | null;
+  onmessage: ((event: MessageEvent<WorkerRequest>) => void) | null;
   postMessage: (message: WorkerResponse) => void;
 };
 
@@ -33,16 +37,28 @@ function displayText(value: unknown): string {
   return typeof value === 'string' && value.trim() ? value : '—';
 }
 
-workerScope.onmessage = async (event) => {
+workerScope.onmessage = async (event: MessageEvent<WorkerRequest>) => {
   try {
-    const parsed: unknown = JSON.parse(await event.data.text());
+    const parsed: unknown = JSON.parse(await event.data.file.text());
     const log = record(record(parsed).log);
     const entries = log.entries;
     if (!Array.isArray(entries)) {
       workerScope.postMessage({
         ok: false,
+        kind: 'error',
         error:
           'This JSON does not contain a valid HAR log.entries array. Choose a HAR export and try again.',
+      });
+      return;
+    }
+
+    if (event.data.kind === 'redaction') {
+      const result = redactHar(parsed);
+      workerScope.postMessage({
+        ok: true,
+        kind: 'redaction',
+        sanitizedJson: JSON.stringify(result.har, null, 2),
+        redactedCount: result.redactedCount,
       });
       return;
     }
@@ -74,10 +90,11 @@ workerScope.onmessage = async (event) => {
     }, 0);
     const pages = Array.isArray(log.pages) ? log.pages : [];
     const analysis = analyzeHar(entries, pages);
-    workerScope.postMessage({ ok: true, requests, totalTime, analysis });
+    workerScope.postMessage({ ok: true, kind: 'analysis', requests, totalTime, analysis });
   } catch {
     workerScope.postMessage({
       ok: false,
+      kind: 'error',
       error:
         'We couldn’t read this file as JSON. Check that it is a complete, valid HAR recording.',
     });

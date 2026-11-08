@@ -53,7 +53,7 @@ function Timeline({ analysis }: WhatWentWrongProps) {
       <div className="ww-timeline-heading">
         <div>
           <div className="ww-section-kicker"><Clock3 size={13} aria-hidden="true" /> Timing context</div>
-          <h3 id="ww-timeline-title">First error in the request sequence</h3>
+          <h3 id="ww-timeline-title">Timeline</h3>
         </div>
         {total !== null && (
           <span className="ww-total-time" data-testid="value-timeline-total">
@@ -65,7 +65,10 @@ function Timeline({ analysis }: WhatWentWrongProps) {
       {timeline.anchor === 'none' ? (
         <div className="ww-timeline-empty" role="status" data-testid="status-timeline-unavailable">
           <Info size={16} aria-hidden="true" />
-          <span>There isn’t enough timing data in this capture to place an error on the timeline.</span>
+          <span>
+            {!hasError && 'No errors found in this recording. '}
+            There isn’t enough timing data in this capture to place an error on the timeline.
+          </span>
         </div>
       ) : (
         <>
@@ -85,7 +88,7 @@ function Timeline({ analysis }: WhatWentWrongProps) {
                 First error{errorTime && <time dateTime={timeline.firstErrorAt ?? undefined}> · {errorTime}</time>}
               </span>
             ) : (
-              <span className="ww-no-error-label" data-testid="status-no-timeline-error">No error recorded</span>
+              <span className="ww-no-error-label" data-testid="status-no-timeline-error">No errors found in this recording</span>
             )}
           </div>
           {hasError && (
