@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "HAR Analyzer"
+description = "A privacy-first browser tool for inspecting HAR network captures, with request summaries, filtering, sorting, and browser-specific capture instructions."
+version = "1.0.0"
+id = "artifacts/har-analyzer"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18488
+
+[services.development]
+run = "pnpm --filter @workspace/har-analyzer run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/har-analyzer", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/har-analyzer/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18488"
+BASE_PATH = "/"
