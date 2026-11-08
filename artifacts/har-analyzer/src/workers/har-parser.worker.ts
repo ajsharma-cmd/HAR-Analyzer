@@ -1,3 +1,5 @@
+import { analyzeHar, type AnalysisResult } from '../analyzer.js';
+
 type HarRequest = {
   id: number;
   method: string;
@@ -9,7 +11,7 @@ type HarRequest = {
 };
 
 type WorkerResponse =
-  | { ok: true; requests: HarRequest[]; totalTime: number }
+  | { ok: true; requests: HarRequest[]; totalTime: number; analysis: AnalysisResult }
   | { ok: false; error: string };
 
 const workerScope = self as unknown as {
@@ -34,7 +36,8 @@ function displayText(value: unknown): string {
 workerScope.onmessage = async (event) => {
   try {
     const parsed: unknown = JSON.parse(await event.data.text());
-    const entries = record(record(parsed).log).entries;
+    const log = record(record(parsed).log);
+    const entries = log.entries;
     if (!Array.isArray(entries)) {
       workerScope.postMessage({
         ok: false,
@@ -69,7 +72,9 @@ workerScope.onmessage = async (event) => {
       const time = finiteNumber(record(rawEntry).time);
       return time === null || time < 0 ? total : total + time;
     }, 0);
-    workerScope.postMessage({ ok: true, requests, totalTime });
+    const pages = Array.isArray(log.pages) ? log.pages : [];
+    const analysis = analyzeHar(entries, pages);
+    workerScope.postMessage({ ok: true, requests, totalTime, analysis });
   } catch {
     workerScope.postMessage({
       ok: false,

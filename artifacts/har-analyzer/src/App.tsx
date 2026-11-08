@@ -26,6 +26,8 @@ import {
   useLocation,
   Router as WouterRouter,
 } from 'wouter';
+import type { AnalysisResult } from './analyzer.js';
+import WhatWentWrong from '@/components/WhatWentWrong';
 
 const queryClient = new QueryClient();
 
@@ -41,7 +43,7 @@ type HarRequest = {
 type SortKey = 'method' | 'url' | 'status' | 'type' | 'time' | 'size';
 type SortDirection = 'asc' | 'desc';
 type WorkerResponse =
-  | { ok: true; requests: HarRequest[]; totalTime: number }
+  | { ok: true; requests: HarRequest[]; totalTime: number; analysis: AnalysisResult }
   | { ok: false; error: string };
 const MAX_BYTES = 100 * 1024 * 1024;
 
@@ -59,6 +61,7 @@ function Home() {
   const inputRef = useRef<HTMLInputElement>(null);
   const workerRef = useRef<Worker | null>(null);
   const [requests, setRequests] = useState<HarRequest[] | null>(null);
+  const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [fileName, setFileName] = useState('');
   const [totalTime, setTotalTime] = useState(0);
   const [error, setError] = useState('');
@@ -103,6 +106,7 @@ function Home() {
           return;
         }
         setRequests(result.requests);
+        setAnalysis(result.analysis);
         setFileName(file.name);
         setTotalTime(result.totalTime);
         setSearch('');
@@ -225,6 +229,7 @@ function Home() {
               <div className="stat"><div className="stat-label"><Clock3 size={13} /> Total request time</div><div className="stat-value" data-testid="value-total-time">{formatDuration(totalTime)}</div></div>
               <div className="stat"><div className="stat-label"><Gauge size={13} /> Failed requests</div><div className={`stat-value${failedCount ? ' danger' : ''}`} data-testid="value-failed-count">{failedCount.toLocaleString()}</div></div>
             </section>
+            {analysis && <WhatWentWrong analysis={analysis} />}
             <section className="results" aria-labelledby="requests-title">
               <div className="results-head">
                 <div>
